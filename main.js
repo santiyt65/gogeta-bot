@@ -15,8 +15,32 @@ import { comandoInfoBot } from './comandos/infobot.js';
 import { comandoDonar } from './comandos/donar.js';
 import { comandoMenu } from './comandos/menu.js';
 import { comandoSubMenu } from './comandos/menu_secciones.js';
+import { comandoTrivia, iniciarTriviaCategoria, verificarRespuesta } from './comandos/trivia.js';
+import { comandoRankingTrivia } from './comandos/ranking_trivia.js';
+import { comandoAgregarPregunta } from './comandos/agregarpregunta.js';
+import { comandoMisPreguntas } from './comandos/mispreguntas.js';
+import { comandoEliminarPregunta } from './comandos/eliminarpregunta.js';
+import { comandoModificarPregunta } from './comandos/modificarpregunta.js';
+import { comandoRevisarPreguntas, comandoAprobarPregunta, comandoRechazarPregunta, manejarBotonRespuesta } from './comandos/moderacion_preguntas.js';
+import { comandoEstadoPregunta } from './comandos/estadopregunta.js';
+
 const { Client, LocalAuth, Buttons } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
+
+// === EJEMPLO de función para validar admin ===
+// Debes implementar esto según tu lógica de admins reales
+function isAdmin(message) {
+  // Ejemplo: solo permitir al dueño del bot
+  const adminNumbers = [
+    '5491112345678@c.us', // <-- cambia esto por los números reales de admin
+    // agrega más si quieres
+  ];
+  return adminNumbers.includes(message.author || message.from);
+}
+
+// Si usas sock/msg en vez de client/message, define sock y msg:
+const sock = client;
+const msg = message;
 
 // Configuración e inicialización del cliente de WhatsApp
 const client = new Client({
@@ -24,18 +48,15 @@ const client = new Client({
     puppeteer: { headless: true }
 });
 
-// Evento para mostrar el QR en la terminal
 client.on('qr', (qr) => {
     console.log('Escanea el siguiente QR con tu WhatsApp:');
     qrcode.generate(qr, { small: true });
 });
 
-// Evento que indica que el bot está listo
 client.on('ready', () => {
     console.log('¡El bot está listo y conectado a WhatsApp!');
 });
 
-// Lógica de manejo de mensajes
 client.on('message', async message => {
     const text = message.body;
 
@@ -65,9 +86,44 @@ client.on('message', async message => {
     // Comando .donar
     if (text === '.donar') await comandoDonar(client, message);
 
-    // Comando .menu y submenús
+    // .menu y submenús
     if (text === '.menu') await comandoMenu(client, message);
     if (text.startsWith('.menu ')) await comandoSubMenu(client, message, text.split(' '));
+
+    // Comando .trivia simple
+    if (text === '.trivia') await comandoTrivia(client, message);
+
+    // Comando .trivia <categoria>
+    if (text.startsWith('.trivia ')) {
+        const categoria = text.split(' ')[1];
+        await iniciarTriviaCategoria(client, message, categoria);
+    }
+
+    // Comando ranking trivia
+    if (text === '.ranking') await comandoRankingTrivia(client, message);
+
+    // Manejo de respuestas de trivia (números)
+    if (['1', '2', '3', '4'].includes(text.trim())) await verificarRespuesta(client, message);
+
+    // Comando para agregar preguntas de trivia
+    if (text.startsWith('.agregarpregunta')) await comandoAgregarPregunta(client, message);
+
+    // Comando para mostrar las preguntas del usuario
+    if (text === '.mispreguntas') await comandoMisPreguntas(client, message);
+
+    // Comando para eliminar preguntas de trivia
+    if (text.startsWith('.eliminarpregunta')) await comandoEliminarPregunta(client, message);
+
+    // Comando para modificar preguntas de trivia
+    if (text.startsWith('.modificarpregunta')) await comandoModificarPregunta(client, message);
+
+    // Comandos de moderación de preguntas (requiere admin)
+    if (text === '.revisarpreguntas') await comandoRevisarPreguntas(client, message, isAdmin(message));
+    if (text === '.aprobarpregunta') await comandoAprobarPregunta(client, message, isAdmin(message));
+    if (text === '.rechazarpregunta') await comandoRechazarPregunta(client, message, isAdmin(message));
+
+    // Comando para ver estado de una pregunta (requiere admin)
+    if (text === '.estadopregunta') await comandoEstadoPregunta(client, message, isAdmin);
 
     // Comando .etiquetar (soporta variantes)
     if (text.startsWith('.etiquetar')) await comandoEtiquetar(client, message);
@@ -122,15 +178,27 @@ client.on('message', async message => {
     }
 });
 
-// Manejo de errores de autenticación
+// === Escuchar respuestas de botones (si usas sock) ===
+// Si usas Baileys, este bloque es necesario
+if (typeof sock !== "undefined" && sock.ev && typeof sock.ev.on === "function") {
+  sock.ev.on('messages.upsert', async (m) => {
+    const msgs = m.messages;
+    if (!msgs || msgs.length === 0) return;
+
+    for (const message of msgs) {
+      if (message.message?.buttonsResponseMessage) {
+        await manejarBotonRespuesta(sock, message);
+      }
+    }
+  });
+}
+
 client.on('auth_failure', msg => {
     console.error('Error de autenticación:', msg);
 });
 
-// Evento cuando el cliente se desconecta
 client.on('disconnected', (reason) => {
     console.log('El cliente se desconectó por:', reason);
 });
 
-// Inicializa el cliente
 client.initialize();

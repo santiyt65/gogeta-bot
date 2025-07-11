@@ -1,0 +1,10 @@
+{
+  "cultura": [
+    {
+      "pregunta": "¿Quién pintó la Mona Lisa?",
+      "opciones": ["Leonardo da Vinci", "Miguel Ángel", "Picasso", "Goya"],
+      "correcta": 0,
+      "autor": "549123456789@s.whatsapp.net"
+    }
+  ]
+}
