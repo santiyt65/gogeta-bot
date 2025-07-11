@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { mostrarPerfil } from './comandos/perfil.js';
 import { manejarAhorcado } from './comandos/ahorcado.js';
 import { resetRanking } from './comandos/reset.js';
@@ -27,26 +28,26 @@ import { comandoEstadoPregunta } from './comandos/estadopregunta.js';
 const { Client, LocalAuth, Buttons } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 
+// === BANEO ===
+const archivoBan = './lib/baneados.json';
+let baneados = fs.existsSync(archivoBan)
+  ? JSON.parse(fs.readFileSync(archivoBan))
+  : [];
+
 // === EJEMPLO de función para validar admin ===
-// Debes implementar esto según tu lógica de admins reales
 function isAdmin(message) {
-  // Ejemplo: solo permitir al dueño del bot
   const adminNumbers = [
     '5491112345678@c.us', // <-- cambia esto por los números reales de admin
-    // agrega más si quieres
   ];
   return adminNumbers.includes(message.author || message.from);
 }
 
 // Si usas sock/msg en vez de client/message, define sock y msg:
-const sock = client;
-const msg = message;
-
-// Configuración e inicialización del cliente de WhatsApp
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: { headless: true }
 });
+const sock = client;
 
 client.on('qr', (qr) => {
     console.log('Escanea el siguiente QR con tu WhatsApp:');
@@ -59,6 +60,9 @@ client.on('ready', () => {
 
 client.on('message', async message => {
     const text = message.body;
+    const msg = message;
+    const sender = msg.key?.participant || msg.key?.remoteJid;
+    if (baneados.includes(sender)) return; // el bot no responde
 
     // Comando .perfil
     if (text === '.perfil') {
