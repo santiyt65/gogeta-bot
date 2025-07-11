@@ -3,12 +3,13 @@ import { mostrarPerfil } from './comandos/perfil.js';
 import { manejarAhorcado } from './comandos/ahorcado.js';
 import { resetRanking } from './comandos/reset.js';
 import { comandoBan } from './comandos/ban.js';
-import { comandoUnban } from './comandos/unban.js';
+import { comandoUnban } from './comandos/admin/unban.js';
 import { comandoMute } from './comandos/mute.js';
 import { mostrarMenuAdmin } from './comandos/adminmenu.js';
 import { comandoPromote } from './comandos/promote.js';
 import { comandoDemote } from './comandos/demote.js';
-import { comandoUnmute } from './comandos/unmute.js';
+import { comandoUnmute } from './comandos/admin/unmute.js';
+import { comandoListaMute } from './comandos/admin/listamute.js';
 import { comandoLinkGrupo } from './comandos/linkgrupo.js';
 import { comandoInfoGrupo } from './comandos/infogrupo.js';
 import { comandoEtiquetar } from './comandos/etiquetar.js';
@@ -32,6 +33,12 @@ const qrcode = require('qrcode-terminal');
 const archivoBan = './lib/baneados.json';
 let baneados = fs.existsSync(archivoBan)
   ? JSON.parse(fs.readFileSync(archivoBan))
+  : [];
+
+// === MUTEADOS ===
+const archivoMute = './lib/muteados.json';
+let muteados = fs.existsSync(archivoMute)
+  ? JSON.parse(fs.readFileSync(archivoMute))
   : [];
 
 // === EJEMPLO de función para validar admin ===
@@ -62,6 +69,11 @@ client.on('message', async message => {
     const text = message.body;
     const msg = message;
     const sender = msg.key?.participant || msg.key?.remoteJid;
+
+    // Verificar muteados
+    if (muteados.includes(sender)) return; // El bot ignora al usuario muteado
+
+    // Verificar baneados
     if (baneados.includes(sender)) return; // el bot no responde
 
     // Comando .perfil
@@ -80,7 +92,13 @@ client.on('message', async message => {
     if (text === '.admin') await mostrarMenuAdmin(client, message);
     if (text === '.promote') await comandoPromote(client, message);
     if (text === '.demote') await comandoDemote(client, message);
-    if (text === '.unmute') await comandoUnmute(client, message);
+
+    // Comando .unmute con validación de admin
+    if (text === '.unmute') await comandoUnmute(sock, msg, isAdmin);
+
+    // Comando .listamute con validación de admin
+    if (text === '.listamute') await comandoListaMute(sock, msg, isAdmin);
+
     if (text === '.linkgrupo') await comandoLinkGrupo(client, message);
     if (text === '.infogrupo') await comandoInfoGrupo(client, message);
 
@@ -129,12 +147,14 @@ client.on('message', async message => {
     // Comando para ver estado de una pregunta (requiere admin)
     if (text === '.estadopregunta') await comandoEstadoPregunta(client, message, isAdmin);
 
+    // Comando .unban (nuevo import y handler)
+    if (text.startsWith('.unban')) await comandoUnban(client, message);
+
     // Comando .etiquetar (soporta variantes)
     if (text.startsWith('.etiquetar')) await comandoEtiquetar(client, message);
 
-    // Comandos ban/unban/mute
+    // Comandos ban/mute
     if (text.startsWith('.ban')) await comandoBan(client, message);
-    if (text.startsWith('.unban')) await comandoUnban(client, message);
     if (text.startsWith('.mute')) await comandoMute(client, message);
 
     // Comando para manejar ahorcado (siempre lo intenta manejar)
