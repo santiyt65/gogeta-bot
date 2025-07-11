@@ -2,7 +2,7 @@ import fs from 'fs';
 import { mostrarPerfil } from './comandos/perfil.js';
 import { manejarAhorcado } from './comandos/ahorcado.js';
 import { resetRanking } from './comandos/reset.js';
-import { comandoBan } from './comandos/ban.js';
+import { comandoBan } from './comandos/admin/ban.js';
 import { comandoUnban } from './comandos/admin/unban.js';
 import { comandoMute } from './comandos/mute.js';
 import { mostrarMenuAdmin } from './comandos/adminmenu.js';
@@ -25,6 +25,7 @@ import { comandoEliminarPregunta } from './comandos/eliminarpregunta.js';
 import { comandoModificarPregunta } from './comandos/modificarpregunta.js';
 import { comandoRevisarPreguntas, comandoAprobarPregunta, comandoRechazarPregunta, manejarBotonRespuesta } from './comandos/moderacion_preguntas.js';
 import { comandoEstadoPregunta } from './comandos/estadopregunta.js';
+import comandos from './comandos/index.js'; // Nuevo import
 
 const { Client, LocalAuth, Buttons } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
@@ -99,6 +100,9 @@ client.on('message', async message => {
     // Comando .listamute con validación de admin
     if (text === '.listamute') await comandoListaMute(sock, msg, isAdmin);
 
+    // Comando .ban desde index.js (funciona bien)
+    if (text.startsWith('.ban')) await comandos.comandoBan(sock, msg, isAdmin);
+
     if (text === '.linkgrupo') await comandoLinkGrupo(client, message);
     if (text === '.infogrupo') await comandoInfoGrupo(client, message);
 
@@ -153,8 +157,7 @@ client.on('message', async message => {
     // Comando .etiquetar (soporta variantes)
     if (text.startsWith('.etiquetar')) await comandoEtiquetar(client, message);
 
-    // Comandos ban/mute
-    if (text.startsWith('.ban')) await comandoBan(client, message);
+    // Comando .mute
     if (text.startsWith('.mute')) await comandoMute(client, message);
 
     // Comando para manejar ahorcado (siempre lo intenta manejar)
