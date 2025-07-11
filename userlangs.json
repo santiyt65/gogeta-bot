@@ -1,0 +1,22 @@
+{
+  "santiyt65": {
+    "lang": "es",
+    "whatsapp_registered": true
+  },
+  "johnsmith": {
+    "lang": "en",
+    "whatsapp_registered": false
+  },
+  "janedoe": {
+    "lang": "en",
+    "whatsapp_registered": true
+  },
+  "maria123": {
+    "lang": "es",
+    "whatsapp_registered": false
+  },
+  "lucas_m": {
+    "lang": "es",
+    "whatsapp_registered": true
+  }
+}

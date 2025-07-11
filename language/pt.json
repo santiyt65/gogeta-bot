@@ -1,0 +1,23 @@
+{
+  "menus": {
+    "main_menu_title": "💫Menu do Gogeta💫",
+    "menu_1": "Menu 1️⃣",
+    "menu_2": "Menu 2️⃣",
+    "menu_3": "Menu 3️⃣"
+  },
+  "menu_1": {
+    "title": "🔴Menu 1️⃣",
+    "games_section": "🎲Jogos",
+    "games": [
+      "1-Verdade ou Desafio",
+      "2-Forca",
+      "3-pedra, papel ou tesoura"
+    ],
+    "troll_section": "😂Comandos Troll 😂",
+    "troll_commands": [
+      "1-Gay @username",
+      "2-otário @username",
+      "3-vadia @username"
+    ]
+  }
+}

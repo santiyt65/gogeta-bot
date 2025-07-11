@@ -1,0 +1,23 @@
+{
+  "menus": {
+    "main_menu_title": "💫Gogeta's Menu💫",
+    "menu_1": "Menu 1️⃣",
+    "menu_2": "Menu 2️⃣",
+    "menu_3": "Menu 3️⃣"
+  },
+  "menu_1": {
+    "title": "🔴Menu 1️⃣",
+    "games_section": "🎲Games",
+    "games": [
+      "1-Truth or Dare",
+      "2-Hangman",
+      "3-Rock, Paper, or Scissors"
+    ],
+    "troll_section": "😂Troll Commands 😂",
+    "troll_commands": [
+      "1-Gay @username",
+      "2-jerk @username",
+      "3-bitch @username"
+    ]
+  }
+}
