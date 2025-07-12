@@ -1,4 +1,4 @@
-export async function comandoDonar(sock, msg) {
+export async function comandoDonar(sock, msg, store) {
   const jid = msg.key.remoteJid;
   const texto = `💖 *Gracias por apoyar el bot*  
 Podés donar en el siguiente enlace:

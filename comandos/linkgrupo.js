@@ -1,6 +1,6 @@
 import { esAdmin, OWNERS } from '../lib/admin.js';
 
-export async function comandoLinkGrupo(sock, msg) {
+export async function comandoLinkGrupo(sock, msg, store) {
   const jid = msg.key.remoteJid;
   const sender = msg.key.participant || msg.key.remoteJid;
 

@@ -8,7 +8,7 @@ const author = pkg.author || 'SantiYT65';
  * Comando: .infobot
  * Muestra información del bot
  */
-export async function comandoInfoBot(sock, msg) {
+export async function comandoInfoBot(sock, msg, store) {
   const jid = msg.key.remoteJid;
 
   const texto = `🤖 *${name}* - Información del Bot

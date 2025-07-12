@@ -1,4 +1,4 @@
-export async function comandoInfoGrupo(sock, msg) {
+export async function comandoInfoGrupo(sock, msg, store) {
   const jid = msg.key.remoteJid;
 
   if (!jid.endsWith('@g.us')) {

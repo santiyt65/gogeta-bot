@@ -10,7 +10,7 @@ function loadRanking() {
   }
 }
 
-export async function mostrarPerfil(sock, msg) {
+export async function comandoPerfil(sock, msg, store) {
   const jid = msg.key.participant || msg.key.remoteJid;
   const ranking = loadRanking();
 

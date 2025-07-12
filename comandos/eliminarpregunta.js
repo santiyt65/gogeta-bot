@@ -2,7 +2,7 @@ import fs from 'fs';
 
 const archivo = './lib/preguntas_personalizadas.json';
 
-export async function comandoEliminarPregunta(sock, msg) {
+export async function comandoEliminarPregunta(sock, msg, store) {
   const jid = msg.key.remoteJid;
   const sender = msg.key.participant || msg.key.remoteJid;
 
