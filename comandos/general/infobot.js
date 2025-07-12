@@ -1,42 +1,37 @@
-import os from 'os';
-import { name, version, author } from '../../package.json' assert { type: 'json' };
+import pkg from '../../package.json' assert { type: 'json' };
 
+const name = pkg.name || 'GogetaBot';
+const version = pkg.version || '1.0.0';
+const author = pkg.author || 'SantiYT65';
+
+/**
+ * Comando: .infobot
+ * Muestra información del bot
+ */
 export async function comandoInfoBot(sock, msg) {
   const jid = msg.key.remoteJid;
 
-  const uptime = process.uptime() * 1000;
-  const horas = Math.floor(uptime / (1000 * 60 * 60));
-  const minutos = Math.floor((uptime % (1000 * 60 * 60)) / (1000 * 60));
-  const segundos = Math.floor((uptime % (1000 * 60)) / 1000);
+  const texto = `🤖 *${name}* - Información del Bot
 
-  const texto = `
-🤖 *Información del Bot*
-
-📛 Nombre: ${name.toUpperCase()}
-🧑‍💻 Autor: ${SantiYT65}
 📦 Versión: ${version}
-📶 Plataforma: ${os.platform()} (${os.arch()})
-⚙️ Node.js: ${process.version}
-⏱️ Uptime: ${horas}h ${minutos}m ${segundos}s
-🧠 Memoria: ${(process.memoryUsage().rss / 1024 / 1024).toFixed(2)} MB
+👤 Creador: ${author}
 
-🔗 GitHub: github.com/santiyt65  
-💬 WhatsApp: wa.me/549123456789  
-💰 Donaciones: paypal.me/santiyt65  
-📣 Canal oficial: https://whatsapp.com/channel/0029VajKFjlJJhzU8fvTPn2L  
-👥 Grupo oficial: https://chat.whatsapp.com/CHDMJCKuPMiLt4NuhaK1rv?mode=ac_c
-`;
+📎 GitHub: https://github.com/santiyt65
+📣 Canal Oficial: https://whatsapp.com/channel/0029VajKFjlJJhzU8fvTPn2L
+💬 Grupo Oficial: https://chat.whatsapp.com/CHDMJCKuPMiLt4NuhaK1rv?mode=ac_c
+💰 Donaciones: https://paypal.me/santiyt65`;
 
-  await sock.sendMessage(jid, {
-    text: texto.trim(),
-    footer: 'GOGETA\\BOT - Hecho por santiyt65',
-    buttons: [
-      { buttonId: '.menu', buttonText: { displayText: '📜 Menú principal' }, type: 1 },
-      { buttonId: '.ping', buttonText: { displayText: '📶 Ver ping' }, type: 1 },
-      { buttonId: '.donar', buttonText: { displayText: '💰 Donar' }, type: 1 },
-      { buttonId: '.grupooficial', buttonText: { displayText: '👥 Grupo Oficial' }, type: 1 },
-      { buttonId: '.canaloficial', buttonText: { displayText: '📣 Canal Oficial' }, type: 1 }
-    ],
+  const botones = [
+    { buttonId: `.menu`, buttonText: { displayText: '📋 Menú Principal' }, type: 1 },
+    { buttonId: `.donar`, buttonText: { displayText: '💸 Donar' }, type: 1 },
+  ];
+
+  const mensaje = {
+    text: texto,
+    footer: 'Gogeta Bot 💥',
+    buttons: botones,
     headerType: 1
-  }, { quoted: msg });
+  };
+
+  await sock.sendMessage(jid, mensaje, { quoted: msg });
 }

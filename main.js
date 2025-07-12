@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { mostrarPerfil } from './comandos/general/perfil.js';
+import { mostrarPerfil } from './comandos/perfil.js';
 import { manejarAhorcado } from './comandos/ahorcado.js';
 import { resetRanking } from './comandos/reset.js';
 import { comandoBan } from './comandos/admin/ban.js';
@@ -12,20 +12,20 @@ import { comandoUnmute } from './comandos/admin/unmute.js';
 import { comandoListaMute } from './comandos/admin/listamute.js';
 import { comandoLinkGrupo } from './comandos/linkgrupo.js';
 import { comandoInfoGrupo } from './comandos/infogrupo.js';
-import { comandoEtiquetar } from './comandos/general/etiquetar.js';
-import { comandoInfoBot } from './comandos/general/infobot.js';
-import { comandoDonar } from './comandos/donar.js';
-import { comandoMenu } from './comandos/general/menu.js';
+import { comandoEtiquetar } from './comandos/etiquetar.js';
+import { comandoInfoBot } from './comandos/infobot.js';
+import { comandoMenu } from './comandos/menu.js';
 import { comandoSubMenu } from './comandos/menu_secciones.js';
-import { comandoTrivia, iniciarTriviaCategoria, verificarRespuesta } from './comandos/juegos/trivia.js';
+import { comandoTrivia, iniciarTriviaCategoria, verificarRespuesta } from './comandos/trivia.js';
 import { comandoRankingTrivia } from './comandos/ranking_trivia.js';
-import { comandoAgregarPregunta } from './comandos/juegos/agregarpregunta.js';
-import { comandoMisPreguntas } from './comandos/juegos/mispreguntas.js';
+import { comandoAgregarPregunta } from './comandos/agregarpregunta.js';
+import { comandoMisPreguntas } from './comandos/mispreguntas.js';
 import { comandoEliminarPregunta } from './comandos/eliminarpregunta.js';
-import { comandoModificarPregunta } from './comandos/juegos/modificarpregunta.js';
-import { comandoRevisarPreguntas, comandoAprobarPregunta, comandoRechazarPregunta, manejarBotonRespuesta } from './comandos/admin/moderacionPreguntas.js';
-import { comandoEstadoPregunta } from './comandos/admin/estadopregunta.js'; // <--- NUEVO IMPORT
+import { comandoModificarPregunta } from './comandos/modificarpregunta.js';
+import { comandoRevisarPreguntas, comandoAprobarPregunta, comandoRechazarPregunta, manejarBotonRespuesta } from './comandos/moderacion_preguntas.js';
+import { comandoEstadoPregunta } from './comandos/admin/estadopregunta.js';
 import comandos from './comandos/index.js';
+import { comandoDonar } from './comandos/general/donar.js'; // <--- NUEVO IMPORT
 
 const { Client, LocalAuth, Buttons } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
@@ -110,7 +110,7 @@ client.on('message', async message => {
     if (text === '.infobot') await comandoInfoBot(client, message);
 
     // Comando .donar
-    if (text === '.donar') await comandoDonar(client, message);
+    if (text === '.donar') await comandoDonar(sock, msg); // <--- NUEVO HANDLER
 
     // .menu y submenús
     if (text === '.menu') await comandoMenu(client, message);
