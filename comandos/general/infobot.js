@@ -1,5 +1,5 @@
 import os from 'os';
-import { name, version, author } from '../package.json' assert { type: 'json' };
+import { name, version, author } from '../../package.json' assert { type: 'json' };
 
 export async function comandoInfoBot(sock, msg) {
   const jid = msg.key.remoteJid;
