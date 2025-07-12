@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { mostrarPerfil } from './comandos/perfil.js';
-import { manejarAhorcado } from './comandos/ahorcado.js';
+import { manejarAhorcado } from './comandos/juegos/ahorcado.js';
 import { resetRanking } from './comandos/reset.js';
 import { comandoBan } from './comandos/admin/ban.js';
 import { comandoUnban } from './comandos/admin/unban.js';

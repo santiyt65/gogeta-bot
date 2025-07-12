@@ -42,7 +42,7 @@ const baseTrivia = {
 
 const sesionesTrivia = new Map();
 
-export async function comandoTrivia(sock, msg) {
+export async function comandoTrivia(sock, msg , store) {
   const jid = msg.key.remoteJid;
 
   await sock.sendMessage(jid, {
