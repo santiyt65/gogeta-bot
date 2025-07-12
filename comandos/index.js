@@ -17,7 +17,7 @@ export { comandoAhorcado } from './ahorcado.js';
 export { comandoTrivia } from './juegos/trivia.js';
 export { comandoAgregarPregunta } from './juegos/agregarpregunta.js';
 export { comandoMisPreguntas } from './juegos/mispreguntas.js';
-export { comandoEliminarPregunta } from './juegos/eliminarpregunta.js';
+export { comandoEliminarPregunta } from './eliminarpregunta.js';
 export { comandoModificarPregunta } from './juegos/modificarpregunta.js';
 
 // Generales
