@@ -24,8 +24,8 @@ import { comandoMisPreguntas } from './comandos/mispreguntas.js';
 import { comandoEliminarPregunta } from './comandos/eliminarpregunta.js';
 import { comandoModificarPregunta } from './comandos/modificarpregunta.js';
 import { comandoRevisarPreguntas, comandoAprobarPregunta, comandoRechazarPregunta, manejarBotonRespuesta } from './comandos/moderacion_preguntas.js';
-import { comandoEstadoPregunta } from './comandos/estadopregunta.js';
-import comandos from './comandos/index.js'; // Nuevo import
+import { comandoEstadoPregunta } from './comandos/admin/estadopregunta.js'; // <--- NUEVO IMPORT
+import comandos from './comandos/index.js';
 
 const { Client, LocalAuth, Buttons } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
@@ -148,8 +148,8 @@ client.on('message', async message => {
     if (text === '.aprobarpregunta') await comandoAprobarPregunta(client, message, isAdmin(message));
     if (text === '.rechazarpregunta') await comandoRechazarPregunta(client, message, isAdmin(message));
 
-    // Comando para ver estado de una pregunta (requiere admin)
-    if (text === '.estadopregunta') await comandoEstadoPregunta(client, message, isAdmin);
+    // Comando para ver estado de una pregunta (requiere admin, nuevo import)
+    if (text === '.estadopregunta') await comandoEstadoPregunta(sock, msg, isAdmin);
 
     // Comando .unban (nuevo import y handler)
     if (text.startsWith('.unban')) await comandoUnban(client, message);
