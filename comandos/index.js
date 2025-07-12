@@ -13,7 +13,7 @@ export { comandoEstadoPregunta } from './admin/estadopregunta.js';
 // Juegos
 export { comandoAdivina } from './juegos/adivina.js';
 export { comandoPpt } from './juegos/ppt.js';
-export { comandoAhorcado } from './juegos/ahorcado.js';
+export { comandoAhorcado } from './ahorcado.js';
 export { comandoTrivia } from './juegos/trivia.js';
 export { comandoAgregarPregunta } from './juegos/agregarpregunta.js';
 export { comandoMisPreguntas } from './juegos/mispreguntas.js';
