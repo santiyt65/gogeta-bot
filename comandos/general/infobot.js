@@ -13,7 +13,7 @@ export async function comandoInfoBot(sock, msg) {
 🤖 *Información del Bot*
 
 📛 Nombre: ${name.toUpperCase()}
-🧑‍💻 Autor: ${author}
+🧑‍💻 Autor: ${SantiYT65}
 📦 Versión: ${version}
 📶 Plataforma: ${os.platform()} (${os.arch()})
 ⚙️ Node.js: ${process.version}

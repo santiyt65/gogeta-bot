@@ -15,11 +15,11 @@
     "nodejs",
     "bot"
   ],
-  "author": "santiyt65",
+  "author": "SantiYT65",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/santiyt65/gogeta-bot"
+    "url": "https://github.com/SantiYT65/gogeta-bot"
   },
   "dependencies": {
     "@whiskeysockets/baileys": "^6.5.0",
