@@ -22,7 +22,7 @@ export { comandoModificarPregunta } from './juegos/modificarpregunta.js';
 
 // Generales
 export { comandoPing } from './general/ping.js';
-export { comandoInfoBot } from './general/infobot.js';
+export { comandoInfoBot } from './infobot.js';
 export { comandoMenu } from './menu.js';
 export { comandoPerfil } from './perfil.js';
 export { comandoEtiquetar } from './etiquetar.js';

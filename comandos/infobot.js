@@ -1,4 +1,4 @@
-import pkg from '../../package.json' assert { type: 'json' };
+import pkg from '../package.json' assert { type: 'json' };
 
 const name = pkg.name || 'GogetaBot';
 const version = pkg.version || '1.0.0';
