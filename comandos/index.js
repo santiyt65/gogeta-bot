@@ -16,9 +16,9 @@ export { comandoPpt } from './juegos/ppt.js';
 export { comandoAhorcado } from './ahorcado.js';
 export { comandoTrivia } from './trivia.js';
 export { comandoAgregarPregunta } from './agregarpregunta.js';
-export { comandoMisPreguntas } from './juegos/mispreguntas.js';
+export { comandoMisPreguntas } from './mispreguntas.js';
 export { comandoEliminarPregunta } from './eliminarpregunta.js';
-export { comandoModificarPregunta } from './juegos/modificarpregunta.js';
+export { comandoModificarPregunta } from './modificarpregunta.js';
 
 // Generales
 export { comandoPing } from './general/ping.js';
