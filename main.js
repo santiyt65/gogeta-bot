@@ -22,7 +22,7 @@ import { comandoAgregarPregunta } from './comandos/agregarpregunta.js';
 import { comandoMisPreguntas } from './comandos/mispreguntas.js';
 import { comandoEliminarPregunta } from './comandos/eliminarpregunta.js';
 import { comandoModificarPregunta } from './comandos/modificarpregunta.js';
-import { comandoRevisarPreguntas, comandoAprobarPregunta, comandoRechazarPregunta } from './comandos/moderacion_preguntas.js';
+import { comandoRevisarPreguntas, comandoAprobarPregunta, comandoRechazarPregunta } from './comandos/moderacionpreguntas.js';
 import { comandoEstadoPregunta } from './comandos/admin/estadopregunta.js';
 import comandos from './comandos/index.js';
 import { comandoDonar } from './comandos/general/donar.js';
