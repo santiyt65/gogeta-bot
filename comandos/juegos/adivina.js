@@ -19,7 +19,7 @@ function saveRanking(ranking) {
   fs.writeFileSync(rankingPath, JSON.stringify(ranking, null, 2));
 }
 
-export async function manejarAdivina(sock, msg) {
+export async function comandoAdivina(sock, msg, store) {
   const jid = msg.key.remoteJid;
   const from = msg.key.participant || msg.key.remoteJid;
   const text = msg.message.conversation || msg.message.extendedTextMessage?.text || '';
