@@ -22,10 +22,11 @@ import { comandoAgregarPregunta } from './comandos/agregarpregunta.js';
 import { comandoMisPreguntas } from './comandos/mispreguntas.js';
 import { comandoEliminarPregunta } from './comandos/eliminarpregunta.js';
 import { comandoModificarPregunta } from './comandos/modificarpregunta.js';
-import { comandoRevisarPreguntas, comandoAprobarPregunta, comandoRechazarPregunta, manejarBotonRespuesta } from './comandos/moderacion_preguntas.js';
+import { comandoRevisarPreguntas, comandoAprobarPregunta, comandoRechazarPregunta } from './comandos/moderacion_preguntas.js';
 import { comandoEstadoPregunta } from './comandos/admin/estadopregunta.js';
 import comandos from './comandos/index.js';
-import { comandoDonar } from './comandos/general/donar.js'; // <--- NUEVO IMPORT
+import { comandoDonar } from './comandos/general/donar.js';
+import { comandoModeracionPreguntas, manejarBotonRespuesta } from './comandos/index.js'; // <--- NUEVO IMPORT
 
 const { Client, LocalAuth, Buttons } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
@@ -103,6 +104,17 @@ client.on('message', async message => {
     // Comando .ban desde index.js (funciona bien)
     if (text.startsWith('.ban')) await comandos.comandoBan(sock, msg, isAdmin);
 
+    // Comando .moderarpreguntas (nuevo)
+    if (text === '.moderarpreguntas') {
+      await comandoModeracionPreguntas(sock, msg, isAdmin);
+    }
+
+    // Botón de aprobar/rechazar pregunta (nuevo)
+    if (msg.message?.buttonsResponseMessage?.selectedButtonId?.startsWith('.aprobar_') ||
+        msg.message?.buttonsResponseMessage?.selectedButtonId?.startsWith('.rechazar_')) {
+      await manejarBotonRespuesta(sock, msg);
+    }
+
     if (text === '.linkgrupo') await comandoLinkGrupo(client, message);
     if (text === '.infogrupo') await comandoInfoGrupo(client, message);
 
@@ -110,7 +122,7 @@ client.on('message', async message => {
     if (text === '.infobot') await comandoInfoBot(client, message);
 
     // Comando .donar
-    if (text === '.donar') await comandoDonar(sock, msg); // <--- NUEVO HANDLER
+    if (text === '.donar') await comandoDonar(sock, msg);
 
     // .menu y submenús
     if (text === '.menu') await comandoMenu(client, message);
@@ -148,7 +160,7 @@ client.on('message', async message => {
     if (text === '.aprobarpregunta') await comandoAprobarPregunta(client, message, isAdmin(message));
     if (text === '.rechazarpregunta') await comandoRechazarPregunta(client, message, isAdmin(message));
 
-    // Comando para ver estado de una pregunta (requiere admin, nuevo import)
+    // Comando para ver estado de una pregunta (requiere admin)
     if (text === '.estadopregunta') await comandoEstadoPregunta(sock, msg, isAdmin);
 
     // Comando .unban (nuevo import y handler)

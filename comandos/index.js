@@ -7,7 +7,7 @@ export { comandoMute } from './admin/mute.js';
 export { comandoUnmute } from './admin/unmute.js';
 export { comandoListaMute } from './admin/listamute.js';
 export { comandoResetRanking } from './admin/resetRanking.js';
-export { comandoModeracionPreguntas, manejarBotonRespuesta } from './moderacion_preguntas.js';
+export { comandoModeracionPreguntas, manejarBotonRespuesta } from './admin/moderacionPreguntas.js';
 export { comandoEstadoPregunta } from './admin/estadopregunta.js';
 
 // Juegos
