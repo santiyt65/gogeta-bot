@@ -1,4 +1,4 @@
-import { esAdmin, OWNERS } from '../../lib/admin.js';
+import { esAdmin, OWNERS } from '../lib/admin.js';
 
 const cooldowns = new Map(); // Limita un uso cada 60 segundos por grupo
 

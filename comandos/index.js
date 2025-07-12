@@ -23,6 +23,6 @@ export { comandoModificarPregunta } from './juegos/modificarpregunta.js';
 // Generales
 export { comandoPing } from './general/ping.js';
 export { comandoInfoBot } from './general/infobot.js';
-export { comandoMenu } from './general/menu.js';
-export { comandoPerfil } from './general/perfil.js';
-export { comandoEtiquetar } from './general/etiquetar.js';
+export { comandoMenu } from './menu.js';
+export { comandoPerfil } from './perfil.js';
+export { comandoEtiquetar } from './etiquetar.js';
