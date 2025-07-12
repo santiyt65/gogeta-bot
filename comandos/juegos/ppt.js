@@ -34,7 +34,7 @@ function estaEnCooldown(jid) {
   return false;
 }
 
-export async function manejarPPT(sock, msg) {
+export async function comandoPpt(sock, msg, store) {
   const jid = msg.key.remoteJid;
   const from = msg.key.participant || msg.key.remoteJid;
   const text = msg.message.conversation || msg.message.extendedTextMessage?.text || '';
