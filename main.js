@@ -1,69 +1,99 @@
-import makeWASocket, {
+import makeWASocket from '@whiskeysockets/baileys';
+import {
   useMultiFileAuthState,
   DisconnectReason,
   fetchLatestBaileysVersion
 } from '@whiskeysockets/baileys';
-import { readdir } from 'fs/promises';
+import { Boom } from '@hapi/boom';
+import qrcode from 'qrcode-terminal';
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const comandos = new Map();
-
-async function cargarComandos() {
-  const dir = path.join(__dirname, 'comandos');
-  const files = await readdir(dir);
-  for (const file of files) {
-    if (file.endsWith('.js')) {
-      const { default: cmd } = await import(`./comandos/${file}`);
-      if (cmd?.nombre) comandos.set(cmd.nombre, cmd);
-    }
-  }
-}
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 async function iniciarBot() {
-  const { state, saveCreds } = await useMultiFileAuthState('auth');
-  const { version } = await fetchLatestBaileysVersion();
+  const { state, saveCreds } = await useMultiFileAuthState(path.join(__dirname, './session'));
+
+  const { version, isLatest } = await fetchLatestBaileysVersion();
+  console.log(`[ ℹ️ ] Usando la versión de WhatsApp: ${version.join('.')}, última: ${isLatest}`);
 
   const sock = makeWASocket({
     version,
     auth: state,
-    printQRInTerminal: true
+    printQRInTerminal: true,
+    generateHighQualityLinkPreview: true,
+    markOnlineOnConnect: true,
+    syncFullHistory: false,
   });
 
-  sock.ev.on('creds.update', saveCreds);
-  sock.ev.on('connection.update', ({ connection, lastDisconnect }) => {
+  sock.ev.on('connection.update', (update) => {
+    const { connection, lastDisconnect, qr } = update;
+
+    if (qr) {
+      console.log('[ 📲 ] Escanea el QR con tu WhatsApp');
+      qrcode.generate(qr, { small: true });
+    }
+
     if (connection === 'close') {
-      const reason = new Boom(lastDisconnect?.error)?.output.statusCode;
-      if (reason !== DisconnectReason.loggedOut) {
-        console.log('[🔄] Reconectando...');
-        iniciarBot();
+      const motivo = new Boom(lastDisconnect?.error)?.output?.statusCode;
+
+      if (motivo === DisconnectReason.loggedOut) {
+        console.log('[ 🔒 ] Sesión cerrada. Borra la carpeta "session" para volver a emparejar.');
       } else {
-        console.log('[❌] Sesión cerrada.');
+        console.log('[ ❌ ] Desconectado. Reintentando...');
+        iniciarBot(); // Reconectar
       }
     } else if (connection === 'open') {
-      console.log('[✅] Bot conectado');
+      console.log('[ ✅ ] ¡Conectado exitosamente a WhatsApp!');
     }
   });
 
+  sock.ev.on('creds.update', saveCreds);
+
+  // Comandos de ejemplo:
   sock.ev.on('messages.upsert', async ({ messages }) => {
-    const msg = messages[0];
-    if (!msg.message || msg.key.fromMe) return;
+    const m = messages[0];
+    if (!m.message || m.key.fromMe) return;
 
-    const body = msg.message?.conversation || msg.message?.extendedTextMessage?.text || '';
-    if (!body.startsWith('.')) return;
+    const mensaje = m.message.conversation || m.message.extendedTextMessage?.text || '';
+    const comando = mensaje.trim().toLowerCase();
 
-    const [cmd, ...args] = body.slice(1).split(/\s+/);
-    const comando = comandos.get(cmd.toLowerCase());
-    if (comando) {
-      try {
-        await comando.ejecutar(sock, msg, args);
-      } catch (e) {
-        console.error(`Error en .${cmd}:`, e);
-      }
+    const jid = m.key.remoteJid;
+
+    if (comando === '.ping') {
+      const tInicio = Date.now();
+      await sock.sendMessage(jid, { text: '🏓 Pong!' });
+      const tFinal = Date.now();
+      await sock.sendMessage(jid, { text: `📶 Latencia: ${tFinal - tInicio} ms` });
+    }
+
+    if (comando === '.menu') {
+      await sock.sendMessage(jid, {
+        image: { url: './media/menu.jpg' },
+        caption: `🌟 *GOGETA-BOT* 🌟\n\n👋 Hola, este es el menú principal.\n\n✅ .ping\n✅ .infobot\n✅ .donar`,
+        footer: 'Gogeta-Bot',
+        buttons: [
+          { buttonId: '.infobot', buttonText: { displayText: '📘 InfoBot' }, type: 1 },
+          { buttonId: '.donar', buttonText: { displayText: '💖 Donar' }, type: 1 },
+        ],
+        headerType: 4,
+      });
+    }
+
+    if (comando === '.infobot') {
+      await sock.sendMessage(jid, {
+        text: `🤖 *Gogeta-Bot*\n\n🔧 Versión: 1.0\n📦 Repositorio: https://github.com/santiyt65/gogeta-bot\n📱 Contacto: wa.me/549XXXXXXXXXX\n💸 PayPal: https://paypal.me/tuusuario`
+      });
+    }
+
+    if (comando === '.donar') {
+      await sock.sendMessage(jid, {
+        text: `💖 Si quieres apoyar el proyecto:\n\n🔗 https://paypal.me/tuusuario`
+      });
     }
   });
 }
 
-await cargarComandos();
 iniciarBot();
